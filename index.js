@@ -14,6 +14,21 @@ app.get('/ping', (req, res) => {
   res.send('pong');
 });
 
+app.post('/contact', express.json(), (req, res) => {
+  const { name, email, message } = req.body;
+
+  // Basic validation
+  if (!name || !email || !message) {
+    return res.status(400).json({ error: 'All fields are required.' });
+  }
+
+  console.log('Contact form submitted:', { name, email, message });
+
+  // In a real app, you'd send an email or save to DB here
+
+  res.json({ success: true, message: 'Thanks for reaching out!' });
+});
+
 // --- CONTACT FORM ROUTE ---
 app.post('/contact', (req, res) => {
   const { name, email, message } = req.body;
