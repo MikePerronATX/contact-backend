@@ -1,3 +1,5 @@
+// index.js
+
 const express = require('express');
 const cors = require('cors');
 const app = express();
@@ -5,20 +7,28 @@ const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(cors());
-app.use(express.json());
+app.use(express.json()); // Parses incoming JSON in POST requests
 
-// Routes
-app.post('/contact', (req, res) => {
-  const { name, email, message } = req.body;
-  console.log('Contact form submitted:', { name, email, message });
-
-  res.json({
-    success: true,
-    message: `Thanks ${name}, your message was received!`,
-  });
+// --- TEST ROUTE ---
+app.get('/ping', (req, res) => {
+  res.send('pong');
 });
 
-// Start server
+// --- CONTACT FORM ROUTE ---
+app.post('/contact', (req, res) => {
+  const { name, email, message } = req.body;
+
+  if (!name || !email || !message) {
+    return res.status(400).json({ error: 'All fields are required.' });
+  }
+
+  console.log('Contact form submission:', { name, email, message });
+
+  // For now, just respond with a success message
+  res.status(200).json({ success: true, message: 'Form received!' });
+});
+
+// --- START SERVER ---
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 });
