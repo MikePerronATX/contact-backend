@@ -1,49 +1,34 @@
-// index.js
-
 const express = require('express');
 const cors = require('cors');
+
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(cors());
-app.use(express.json()); // Parses incoming JSON in POST requests
+app.use(express.json());
 
-// --- TEST ROUTE ---
-app.get('/ping', (req, res) => {
-  res.send('pong');
-});
-
-app.post('/contact', express.json(), (req, res) => {
+// Contact endpoint
+app.post('/contact', (req, res) => {
   const { name, email, message } = req.body;
 
-  // Basic validation
+  // Simple validation
   if (!name || !email || !message) {
     return res.status(400).json({ error: 'All fields are required.' });
   }
 
   console.log('Contact form submitted:', { name, email, message });
 
-  // In a real app, you'd send an email or save to DB here
-
-  res.json({ success: true, message: 'Thanks for reaching out!' });
+  // In a real app, you'd store this info or send an email
+  res.status(200).json({ message: 'Message received successfully!' });
 });
 
-// --- CONTACT FORM ROUTE ---
-app.post('/contact', (req, res) => {
-  const { name, email, message } = req.body;
-
-  if (!name || !email || !message) {
-    return res.status(400).json({ error: 'All fields are required.' });
-  }
-
-  console.log('Contact form submission:', { name, email, message });
-
-  // For now, just respond with a success message
-  res.status(200).json({ success: true, message: 'Form received!' });
+// Test endpoint
+app.get('/', (req, res) => {
+  res.send('Contact backend is running.');
 });
 
-// --- START SERVER ---
+// Start server
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
